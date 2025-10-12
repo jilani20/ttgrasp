@@ -1,0 +1,36 @@
+[project]
+name = "ttgrasp"
+version = "0.0.1-preview"
+description = "its a package that helps data practioner around train and test data"
+authors = [
+    {name = "jilani20", email = "jilani2420@gmail.com"}
+]
+maintainers = [
+    {name = "jilani20", email = "jilani2420@gmail.com"}
+]
+keywords = ["train", "test", "validation"]
+
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "numpy",
+    "pandas"
+]
+
+[[tool.poetry.source]]
+#name = "my-private-repo"
+#url = "https://my.private.repo/simple/"
+#priority = "private"
+name = "pypi"
+priority = "primary"
+
+
+[tool.poetry]
+packages = [{include = "ttgrasp", from = "src"}]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+
