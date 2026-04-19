@@ -49,13 +49,28 @@ def get_df_grasp(df):
         # t['missing_percentage'] = ((df[feature].isnull().sum()/ df.shape[0]).round(4)*100)
 
     t = t.merge(tmp, on='feature', how='left', suffixes=('', '_y'))
-    t = t.merge(df.describe(include=['int64', 'float64']).transpose().reset_index().rename(columns={'index': 'feature'}), on='feature', how='left', suffixes=('', '_y'))
-    t = t.merge(df.describe(exclude=['int64', 'float64']).transpose().reset_index().rename(columns={'index': 'feature'}), on='feature', how='left', suffixes=('', '_y'))
+    try:
+        t = t.merge(df.describe(include=['int64', 'float64']).transpose().reset_index().rename(columns={'index': 'feature'}), on='feature', how='left', suffixes=('', '_y'))
+    except:
+        print("no numeric columns")
+        pass
+    is_categorical = False
+    try:
+        t = t.merge(df.describe(exclude=['int64', 'float64']).transpose().reset_index().rename(columns={'index': 'feature'}), on='feature', how='left', suffixes=('', '_y'))
+        is_categorical = True
+    except:
+        print("no categorical columns")
+        pass    
     t = t.drop(columns=[col for col in t.columns if col.endswith('_y')])
     # t[t['feature'] == 'E1']
     #t = t.sort_values(by='missing_percentage', ascending=False)
-    return t[['feature', 'data_type', 'count', 'unique_values_cnt', 'unique_values_percentage', 'unique_values_cnt_withnull', 'missing_cnt', 'missing_percentage',
- 'empty_str_cnt', 'empty_str_percentage', 'median_val', 'mode_val', 'mode_cnt', 'mode_values', 'unique_values', 'mean', 'std', 'min', '25%', '50%', '75%', 'max', 'unique', 'top', 'freq']]
+    if is_categorical:
+        features = ['feature', 'data_type', 'count', 'unique_values_cnt', 'unique_values_percentage', 'unique_values_cnt_withnull', 'missing_cnt', 'missing_percentage',
+ 'empty_str_cnt', 'empty_str_percentage', 'median_val', 'mode_val', 'mode_cnt', 'mode_values', 'unique_values', 'mean', 'std', 'min', '25%', '50%', '75%', 'max', 'unique', 'top', 'freq']
+    else:
+        features = ['feature', 'data_type', 'count', 'unique_values_cnt', 'unique_values_percentage', 'unique_values_cnt_withnull', 'missing_cnt', 'missing_percentage',
+ 'empty_str_cnt', 'empty_str_percentage', 'median_val', 'mode_val', 'mode_cnt', 'mode_values', 'unique_values', 'mean', 'std', 'min', '25%', '50%', '75%', 'max']
+    return t[features]
 
 
 

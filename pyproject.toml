@@ -1,6 +1,6 @@
 [project]
 name = "ttgrasp"
-version = "0.0.1-preview"
+version = "0.0.6-preview"
 description = "its a package that helps data practioner around train and test data"
 authors = [
     {name = "jilani20", email = "jilani2420@gmail.com"}
@@ -11,7 +11,7 @@ maintainers = [
 keywords = ["train", "test", "validation"]
 
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.11"
 dependencies = [
     "numpy",
     "pandas"
