@@ -1,6 +1,6 @@
 [project]
 name = "ttgrasp"
-version = "0.0.7-preview"
+version = "0.0.9-preview"
 description = "its a package that helps data practioner around train and test data"
 authors = [
     {name = "jilani20", email = "jilani2420@gmail.com"}

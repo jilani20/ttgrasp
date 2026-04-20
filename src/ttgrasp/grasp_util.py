@@ -26,9 +26,16 @@ def get_df_grasp(df):
         mode_cnt = len(m)
         mode_values = ', '.join(map(str, m.values)) if len(m) > 0 else np.nan
         unique_values = ', '.join(map(str, df[feature].unique()[:9]))
-        rows.append([feature, median_val, mode_val, mode_cnt, mode_values, unique_values])
+        n_unique = df[feature].nunique(dropna=False)
+        if n_unique <= 5:
+            vc = df[feature].value_counts(dropna=False).sort_index()
+            value_counts_dist = ' | '.join([f"{v}:{c}({c / len(df) * 100:.1f}%)" for v, c in vc.items()])
+        else:
+            value_counts_dist = f"high cardinality, that is ({n_unique} unique values.)"
 
-    tmp = pd.DataFrame(rows, columns=['feature', 'median_val', 'mode_val', 'mode_cnt', 'mode_values', 'unique_values'])
+        rows.append([feature, median_val, mode_val, mode_cnt, mode_values, unique_values, value_counts_dist])
+
+    tmp = pd.DataFrame(rows, columns=['feature', 'median_val', 'mode_val', 'mode_cnt', 'mode_values', 'unique_values', 'value_counts_dist'])
 
     t = t.merge(tmp, on='feature', how='left', suffixes=('', '_y'))
 
@@ -63,7 +70,7 @@ def get_df_grasp(df):
             'feature', 'data_type', 'count', 'unique_values_cnt', 'unique_values_percentage',
             'unique_values_cnt_withnull', 'missing_cnt', 'missing_percentage',
             'empty_str_cnt', 'empty_str_percentage', 'median_val', 'mode_val', 'mode_cnt',
-            'mode_values', 'unique_values', 'mean', 'std', 'min', '25%', '50%', '75%', 'max',
+            'mode_values', 'unique_values', 'value_counts_dist', 'mean', 'std', 'min', '25%', '50%', '75%', 'max',
             'unique', 'top', 'freq'
         ]
     else:
@@ -71,7 +78,7 @@ def get_df_grasp(df):
             'feature', 'data_type', 'count', 'unique_values_cnt', 'unique_values_percentage',
             'unique_values_cnt_withnull', 'missing_cnt', 'missing_percentage',
             'empty_str_cnt', 'empty_str_percentage', 'median_val', 'mode_val', 'mode_cnt',
-            'mode_values', 'unique_values', 'mean', 'std', 'min', '25%', '50%', '75%', 'max'
+            'mode_values', 'unique_values', 'value_counts_dist', 'mean', 'std', 'min', '25%', '50%', '75%', 'max'
         ]
 
     # Only include columns that actually exist (guards against mixed-type DataFrames
